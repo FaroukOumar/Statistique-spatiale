@@ -1,0 +1,56 @@
+---
+title: "TP_Raster"
+author: "MOUSSA MAHAMADOU Oumar Farouk"
+date: "2023-12-20"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(raster)
+library(sf)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+# Chargez le fichier raster
+precip<- raster("C:\\Users\\ROSSA\\Documents\\ISEP3\\Semestre1\\Stat spaciale avec R\\wc2.1_10m_prec\\wc2.1_10m_prec_02.tif")
+plot(precip) # affichage de la carte
+precip
+#precip@srs
+#"+proj=longlat +datum=WGS84 +no_defs"
+```
+
+
+
+```{r}
+plot(NIG)
+```
+
+```{r}
+extent(NIG)
+st_crs(NIG)
+st_bbox(NIG)
+```
+
+
+```{r}
+NIG=read_sf("C:\\Users\\ROSSA\\Documents\\ISEP3\\Semestre1\\Stat spaciale avec R\\gadm41_NER_shp\\gadm41_NER_0.shp")
+NIG_reg=read_sf("C:\\Users\\ROSSA\\Documents\\ISEP3\\Semestre1\\Stat spaciale avec R\\gadm41_NER_shp\\gadm41_NER_1.shp")
+
+# Recouper le raster en fonction des limites du pays
+NIG_precip<-crop(precip, extent(st_bbox(NIG)))
+
+NIG_precip<-rasterize(NIG,NIG_precip, mask=TRUE)
+plot(NIG_precip)
+```
+
+
+
+## Délimitation des régions
+
+```{r}
+plot(NIG_precip)
+# Découpage niveau region
+plot(st_geometry(NIG_reg), add = TRUE, border = "black", lwd = 1)
+```
